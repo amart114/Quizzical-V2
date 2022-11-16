@@ -10,20 +10,24 @@ export default function Quiz() {
     const quizElements = quizData.map(questionObj => {
         return (
             <div>
-            
-                <div className="question-container">
-                    <Question 
-                        question={decodeHtml(questionObj.question)}
-                    />
+                <div className="question-answer-container">
+                    
+                    <div className="question-container">
+                        <Question 
+                            question={decodeHtml(questionObj.question)}
+                        />
+                    </div>
+                    
+                    <div className="answers-container">
+                        <Answers 
+                            possibleAnswers={questionObj.answers}
+                            selectedAnswer={questionObj.selectedAnswer}
+                            correctAnswer={questionObj.correctAnswer}
+                        />
+                    </div>
+
                 </div>
                 
-                <div className="answers-container">
-                    <Answers 
-                        possibleAnswers={questionObj.answers}
-                        selectedAnswer={questionObj.selectedAnswer}
-                        correctAnswer={questionObj.correctAnswer}
-                    />
-                </div>
                 
             </div>
         )
