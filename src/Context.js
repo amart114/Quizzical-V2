@@ -10,10 +10,16 @@ function ContextProvider({children}) {
     
     useEffect(() => {
         fetch("https://opentdb.com/api.php?amount=5")
-            .then(res => res.json())
+            .then(res => {
+                if(!res.ok) {
+                    throw Error("Something went wrong")
+                }
+                return res.json()
+            })
             .then(data => {
                 startGame(data.results)
             })
+            .catch(err => console.error(err))
     }, [playAgain])
     
     function startGame(data) {
