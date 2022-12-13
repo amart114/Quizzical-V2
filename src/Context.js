@@ -7,7 +7,6 @@ function ContextProvider({children}) {
     const [gameOn, setGameOn] = useState(true)
     const [playAgain, setPlayAgain] = useState(false)
     
-    
     useEffect(() => {
         fetch("https://opentdb.com/api.php?amount=5")
             .then(res => {
