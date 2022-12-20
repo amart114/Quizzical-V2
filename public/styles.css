@@ -39,7 +39,8 @@ main {
   background-color: #F5F7FB;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
+  min-width: 100vw;
   color: #293264;
 }
 
