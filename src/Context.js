@@ -8,7 +8,7 @@ function ContextProvider({children}) {
     const [playAgain, setPlayAgain] = useState(false)
     
     useEffect(() => {
-        fetch("https://opentdb.com/api.php?amount=5")
+        fetch("https://opentdb.com/api.php?amount=5&category=9&difficulty=easy&type=multiple")
             .then(res => {
                 if(!res.ok) {
                     throw Error("Something went wrong")
