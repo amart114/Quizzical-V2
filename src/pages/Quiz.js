@@ -5,17 +5,18 @@ import Answers from "../components/Answers"
 
 export default function Quiz() {
     const [quizData, setQuizData] = useState([])
+    const [filterOptions, setFilterOptions] = useState({category: "", difficulty: "", })
+    const [submitFilters, setSubmitFilters] = useState(false)
     const [gameOn, setGameOn] = useState(true)
     const [playAgain, setPlayAgain] = useState(false)
 
+    console.log(quizData, submitFilters)
+
     useEffect(() => {
+        
+        const {category, difficulty} = filterOptions
 
-        function startGame(data) {
-            setGameOn(true)
-            setPlayAgain(false)
-        }  
-
-        fetch("https://opentdb.com/api.php?amount=5&category=9&difficulty=easy&type=multiple")
+        fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${difficulty}&type=multiple`)
             .then(res => {
                 if(!res.ok) {
                     throw Error("Something went wrong")
@@ -34,12 +35,12 @@ export default function Quiz() {
                 startGame(quizData)
             })
             .catch(err => console.error(err))
-    }, [playAgain])
+    }, [playAgain, submitFilters]) 
 
-    // const {quizData, decodeHtml, gameOn, submitQuiz, calculateScore, restartGame} = useContext(Context)
-    console.log(quizData)
-
-    
+    function startGame(data) {
+        setGameOn(true)
+        setPlayAgain(false)
+    } 
 
     function shuffleArray(arr) {
         return arr.sort(() => (Math.random() > .5) ? 1 : -1)
@@ -53,11 +54,13 @@ export default function Quiz() {
 
     function submitQuiz() {
         setGameOn(false)
+        setSubmitFilters (false)
     }
 
     function restartGame() {
         setGameOn(true)
         setPlayAgain(true)
+        // setSubmitFilters(false)
     }
 
     function calculateScore() {
@@ -69,9 +72,22 @@ export default function Quiz() {
         })
         return counter
     }
+
+    function handleChange(event) {
+        setFilterOptions(prevFilterOptions => {
+            return {
+                ...prevFilterOptions,
+                [event.target.name]: event.target.value
+            }
+        })
+    }
+
+    function handleSubmit() {
+        setSubmitFilters(true)
+    }
     
     const quizElements = quizData.map(questionObj => {
-        console.log(questionObj)
+        
         return (
             <div>
                 <div className="question-answer-container">
@@ -100,7 +116,34 @@ export default function Quiz() {
     })
     return (
         <main>
-            {quizElements}
+            <form>
+                <select
+                    id="category"
+                    value={filterOptions.category}
+                    onChange={handleChange}
+                    className="filter-category"
+                    name="category"
+                    aria-label="Filter quiz by category"
+                >
+                    <option value={9}>General Knowledge</option>
+                    <option value={10}>Entertainment: Books</option>
+                    <option value={11}>Entertainment: Film</option>
+                </select>
+                <select
+                    id="difficulty"
+                    value={filterOptions.difficulty}
+                    onChange={handleChange}
+                    className="filter-difficulty"
+                    name="difficulty"
+                    aria-label="Filter quiz by difficulty"
+                >
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+                <button onClick={handleSubmit}>Submit</button>
+            </form>
+            {submitFilters ? quizElements : null}
             <p>{gameOn ? null : `You scored ${calculateScore()} out of 5!`}</p>
             <button onClick={gameOn ? submitQuiz : restartGame}>{gameOn ? "Submit Quiz" : "Play Again?"}</button>
         </main>
