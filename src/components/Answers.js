@@ -1,13 +1,31 @@
-import React, {useContext} from "react"
-import {Context} from "../Context"
+import React from "react"
 
+export default function Answers({quiz, decodeHtml, setQuizData, gameOn}) {
+    // const {decodeHtml, toggleSelectedAnswer, gameOn} = useContext(Context)
+    const {answers,correctAnswer, selectedAnswer } = quiz
 
-
-
-export default function Answers({possibleAnswers, selectedAnswer, correctAnswer}) {
-    const {decodeHtml, toggleSelectedAnswer, gameOn} = useContext(Context)
+    function toggleSelectedAnswer(text){
+        setQuizData(prevData => prevData.map(obj => {
+            if (obj.selectedAnswer === text) {
+                return {
+                    ...obj,
+                    selectedAnswer: ""
+                }
+            }
+            if(obj.answers.includes(text)) {
+                return {
+                    ...obj,
+                    selectedAnswer: text
+                }
+            } else {
+                return {
+                    ...obj
+                }
+            }
+        }))
+    }
     
-    return possibleAnswers.map(answer => {
+    return answers.map(answer => {
         
         function styleGenerator() {
             if (!gameOn) {
