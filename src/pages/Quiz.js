@@ -2,15 +2,13 @@ import React, {useEffect, useState} from "react"
 
 import Question from "../components/Question"
 import Answers from "../components/Answers"
+import {shuffleArray, decodeHtml} from "../utils/index"
 
 export default function Quiz() {
     const [quizData, setQuizData] = useState([])
     const [filterOptions, setFilterOptions] = useState({category: "", difficulty: "", quantity: 0})
     const [submitFilters, setSubmitFilters] = useState(false)
     const [gameOn, setGameOn] = useState(false)
-    const [playAgain, setPlayAgain] = useState(false)
-
-    console.log(quizData, filterOptions)
 
     useEffect(() => {
         const {category, difficulty, quantity} = filterOptions
@@ -35,24 +33,11 @@ export default function Quiz() {
             .catch(err => console.error(err))
     }, [submitFilters]) 
 
-
-    function shuffleArray(arr) {
-        return arr.sort(() => (Math.random() > .5) ? 1 : -1)
-    }
-
-    function decodeHtml(html) {
-        const txt = document.createElement('textarea')
-        txt.innerHTML = html
-        return txt.value
-    } 
-
     function submitQuiz() {
         setGameOn(false)
     }
 
     function restartGame() {
-        setPlayAgain(true)
-        setGameOn(false)
         setSubmitFilters(false)
         setFilterOptions({category: "", difficulty: "", quantity: 0})
     }
@@ -76,8 +61,7 @@ export default function Quiz() {
         })
     }
 
-    function handleSubmit(event) {
-        event.preventDefault()
+    function handleSubmit() {
         setSubmitFilters(true)
         setGameOn(true)
     }
@@ -130,8 +114,9 @@ export default function Quiz() {
     
     return (
         <main>
-            {submitFilters? null : <form>
-            <select
+            {submitFilters ? null : 
+            <form>
+                <select
                     id="quantity"
                     value={filterOptions.quantity}
                     onChange={handleChange}
@@ -197,7 +182,7 @@ export default function Quiz() {
                 <button onClick={handleSubmit}>Submit</button>
             </form>}
             
-                {quizData.length > 0 ? renderQuiz(quizData) : <p>Please select quiz options</p>}
+                {quizData.length > 0 ? renderQuiz(quizData) : <p className="select-options-text">Please select quiz options</p>}
 
                 <p>{submitFilters ? gameOn ? null : `You scored ${calculateScore()} out of ${filterOptions.quantity}!` : null}</p>
 
