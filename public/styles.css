@@ -56,6 +56,13 @@ button {
   cursor: pointer;
 }
 
+form select {
+  font-family: 'Karla', sans-serif;
+  padding: 0.5em 1em;
+  margin: 1em;
+  border-radius: 20px;
+}
+
 .question-answer-container {
   display: flex;
   flex-direction: column;
