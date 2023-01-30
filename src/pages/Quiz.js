@@ -130,7 +130,7 @@ export default function Quiz() {
     
     return (
         <main>
-            <form>
+            {submitFilters? null : <form>
             <select
                     id="quantity"
                     value={filterOptions.quantity}
@@ -195,14 +195,14 @@ export default function Quiz() {
                     <option value="hard">Hard</option>
                 </select>
                 <button onClick={handleSubmit}>Submit</button>
-            </form>
-            <div className="bottom-container">
+            </form>}
+            
                 {quizData.length > 0 ? renderQuiz(quizData) : <p>Please select quiz options</p>}
 
                 <p>{submitFilters ? gameOn ? null : `You scored ${calculateScore()} out of ${filterOptions.quantity}!` : null}</p>
 
-                <button onClick={gameOn ? submitQuiz : restartGame}>{submitFilters ? gameOn ? "Submit Quiz" : "Play Again?" : null}</button>
-            </div>
+                {submitFilters ? <button onClick={gameOn ? submitQuiz : restartGame}>{gameOn ? "Submit Quiz" : "Play Again?"}</button> : null}
+            
             
         </main>
     )
