@@ -23,6 +23,7 @@ export default function Answers({quiz, decodeHtml, toggleSelectedAnswer, gameOn}
             className="single-answer"
             style = {styleGenerator()}
             onClick={() => toggleSelectedAnswer(answer)}
+            disabled={!gameOn}
             >
                 {decodeHtml(answer)}
             </div>

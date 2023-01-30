@@ -95,6 +95,10 @@ form select {
   background-color: #D6DBF5;
 }
 
+.single-answer[disabled] {
+  pointer-events: none;
+}
+
 .single-answer p {
   margin: 0;
 }
