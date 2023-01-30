@@ -5,18 +5,17 @@ import Answers from "../components/Answers"
 
 export default function Quiz() {
     const [quizData, setQuizData] = useState([])
-    const [filterOptions, setFilterOptions] = useState({category: "", difficulty: "", })
+    const [filterOptions, setFilterOptions] = useState({category: "", difficulty: "", quantity: 0})
     const [submitFilters, setSubmitFilters] = useState(false)
-    const [gameOn, setGameOn] = useState(true)
+    const [gameOn, setGameOn] = useState(false)
     const [playAgain, setPlayAgain] = useState(false)
 
-    console.log(quizData, submitFilters)
+    console.log(quizData, filterOptions)
 
     useEffect(() => {
-        
-        const {category, difficulty} = filterOptions
+        const {category, difficulty, quantity} = filterOptions
 
-        fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${difficulty}&type=multiple`)
+        fetch(`https://opentdb.com/api.php?amount=${quantity}&category=${category}&difficulty=${difficulty}&type=multiple`)
             .then(res => {
                 if(!res.ok) {
                     throw Error("Something went wrong")
@@ -32,15 +31,10 @@ export default function Quiz() {
                         selectedAnswer: ""
                     }))
                 )
-                startGame(quizData)
             })
             .catch(err => console.error(err))
-    }, [playAgain, submitFilters]) 
+    }, [submitFilters]) 
 
-    function startGame(data) {
-        setGameOn(true)
-        setPlayAgain(false)
-    } 
 
     function shuffleArray(arr) {
         return arr.sort(() => (Math.random() > .5) ? 1 : -1)
@@ -54,13 +48,13 @@ export default function Quiz() {
 
     function submitQuiz() {
         setGameOn(false)
-        setSubmitFilters (false)
     }
 
     function restartGame() {
-        setGameOn(true)
         setPlayAgain(true)
-        // setSubmitFilters(false)
+        setGameOn(false)
+        setSubmitFilters(false)
+        setFilterOptions({category: "", difficulty: "", quantity: 0})
     }
 
     function calculateScore() {
@@ -82,41 +76,75 @@ export default function Quiz() {
         })
     }
 
-    function handleSubmit() {
+    function handleSubmit(event) {
+        event.preventDefault()
         setSubmitFilters(true)
+        setGameOn(true)
     }
-    
-    const quizElements = quizData.map(questionObj => {
-        
-        return (
-            <div>
-                <div className="question-answer-container">
-                    
-                    <div className="question-container">
-                        <Question 
-                            question={decodeHtml(questionObj.question)}
-                        />
-                    </div>
-                    
-                    <div className="answers-container">
-                        <Answers 
-                            key={questionObj.question}
-                            quiz={questionObj}
-                            decodeHtml={decodeHtml}
-                            gameOn={gameOn}
-                            setQuizData={setQuizData}
-                        />
-                    </div>
 
+    function toggleSelectedAnswer(text){
+        setQuizData(prevData => prevData.map(obj => {
+            if (obj.selectedAnswer === text) {
+                return {
+                    ...obj,
+                    selectedAnswer: ""
+                }
+            }
+            if(obj.answers.includes(text)) {
+                return {
+                    ...obj,
+                    selectedAnswer: text
+                }
+            } else {
+                return {
+                    ...obj
+                }
+            }
+        }))
+    }
+    function renderQuiz(data) {
+        return data.map(questionObj => {
+            return (
+                <div>
+                    <div className="question-answer-container">
+                        
+                        <div className="question-container">
+                            <Question 
+                                question={decodeHtml(questionObj.question)}
+                            />
+                        </div>
+                        
+                        <div className="answers-container">
+                            <Answers 
+                                quiz={questionObj}
+                                decodeHtml={decodeHtml}
+                                gameOn={gameOn}
+                                toggleSelectedAnswer={toggleSelectedAnswer}
+                            />
+                        </div>
+                    </div>
                 </div>
-                
-                
-            </div>
-        )
-    })
+            )
+        })
+    } 
+    
     return (
         <main>
             <form>
+            <select
+                    id="quantity"
+                    value={filterOptions.quantity}
+                    onChange={handleChange}
+                    className="filter-quantity"
+                    name="quantity"
+                    aria-label="Filter quiz by number of questions"
+                >
+                    <option value={0}>--Select Number of Questions--</option>
+                    <option value={3}>3</option>
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                </select>
+
                 <select
                     id="category"
                     value={filterOptions.category}
@@ -125,10 +153,34 @@ export default function Quiz() {
                     name="category"
                     aria-label="Filter quiz by category"
                 >
+                    <option value={""}>--Select a Category--</option>
                     <option value={9}>General Knowledge</option>
-                    <option value={10}>Entertainment: Books</option>
-                    <option value={11}>Entertainment: Film</option>
+                    <option value={10}>Books</option>
+                    <option value={11}>Film</option>
+                    <option value={12}>Music</option>
+                    <option value={13}>Musicals & Theater</option>
+                    <option value={14}>Television</option>
+                    <option value={15}>Video Games</option>
+                    <option value={16}>Board Games</option>
+                    <option value={17}>Science & Nature</option>
+                    <option value={18}>Computers</option>
+                    <option value={19}>Math</option>
+                    <option value={20}>Mythology</option>
+                    <option value={21}>Sports</option>
+                    <option value={22}>Geography</option>
+                    <option value={23}>History</option>
+                    <option value={24}>Politics</option>
+                    <option value={25}>Art</option>
+                    <option value={26}>Celebrities</option>
+                    <option value={27}>Animals</option>
+                    <option value={28}>Vehicles</option>
+                    <option value={29}>Comics</option>
+                    <option value={30}>Gadgets</option>
+                    <option value={31}>Japanese Anime</option>
+                    <option value={32}>Cartoons</option>
+
                 </select>
+                
                 <select
                     id="difficulty"
                     value={filterOptions.difficulty}
@@ -137,15 +189,21 @@ export default function Quiz() {
                     name="difficulty"
                     aria-label="Filter quiz by difficulty"
                 >
+                    <option value="">--Select Difficulty--</option>
                     <option value="easy">Easy</option>
                     <option value="medium">Medium</option>
                     <option value="hard">Hard</option>
                 </select>
                 <button onClick={handleSubmit}>Submit</button>
             </form>
-            {submitFilters ? quizElements : null}
-            <p>{gameOn ? null : `You scored ${calculateScore()} out of 5!`}</p>
-            <button onClick={gameOn ? submitQuiz : restartGame}>{gameOn ? "Submit Quiz" : "Play Again?"}</button>
+            <div className="bottom-container">
+                {quizData.length > 0 ? renderQuiz(quizData) : <p>Please select quiz options</p>}
+
+                <p>{submitFilters ? gameOn ? null : `You scored ${calculateScore()} out of ${filterOptions.quantity}!` : null}</p>
+
+                <button onClick={gameOn ? submitQuiz : restartGame}>{submitFilters ? gameOn ? "Submit Quiz" : "Play Again?" : null}</button>
+            </div>
+            
         </main>
     )
 }
