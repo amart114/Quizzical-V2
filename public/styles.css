@@ -56,11 +56,21 @@ button {
   cursor: pointer;
 }
 
+form {
+  align-self: center;
+}
+
 form select {
   font-family: 'Karla', sans-serif;
   padding: 0.5em 1em;
   margin: 1em;
   border-radius: 20px;
+}
+
+.select-options-text {
+  font-size: 1.5em;
+  align-self: center;
+  margin-top: 5em;
 }
 
 .question-answer-container {

@@ -182,7 +182,7 @@ export default function Quiz() {
                 <button onClick={handleSubmit}>Submit</button>
             </form>}
             
-                {quizData.length > 0 ? renderQuiz(quizData) : <p className="select-options-text">Please select quiz options</p>}
+                {quizData.length > 0 ? renderQuiz(quizData) : <p className="select-options-text">Please select quiz options above</p>}
 
                 <p>{submitFilters ? gameOn ? null : `You scored ${calculateScore()} out of ${filterOptions.quantity}!` : null}</p>
 
