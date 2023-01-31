@@ -10,7 +10,8 @@ export default function Answers({quiz, decodeHtml, toggleSelectedAnswer, gameOn}
             if (!gameOn) {
                 return selectedAnswer === correctAnswer ? 
                 selectedAnswer === answer ? {backgroundColor: "green"} : null :
-                selectedAnswer === answer ? {backgroundColor: "red"} : null
+                selectedAnswer === answer ? {backgroundColor: "red"} : 
+                correctAnswer === answer ? {backgroundColor: "lightgreen"} : null
             } else if (selectedAnswer === answer) {
                 return {backgroundColor: "#D6DBF5"}
             } else {
@@ -31,5 +32,3 @@ export default function Answers({quiz, decodeHtml, toggleSelectedAnswer, gameOn}
     })
     
 }
-
-// {selectedAnswer === answer ? {backgroundColor: "#D6DBF5"} : null}
