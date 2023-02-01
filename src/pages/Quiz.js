@@ -86,6 +86,7 @@ export default function Quiz() {
             }
         }))
     }
+    
     function renderQuiz(data) {
         return data.map(questionObj => {
             return (
@@ -163,7 +164,6 @@ export default function Quiz() {
                     <option value={30}>Gadgets</option>
                     <option value={31}>Japanese Anime</option>
                     <option value={32}>Cartoons</option>
-
                 </select>
                 
                 <select
@@ -182,13 +182,14 @@ export default function Quiz() {
                 <button onClick={handleSubmit}>Submit</button>
             </form>}
             
-                {quizData.length > 0 ? renderQuiz(quizData) : <p className="select-options-text">Please select quiz options above</p>}
+                {quizData.length > 0 ? renderQuiz(quizData) : 
+                <p className="select-options-text">Please select quiz options above</p>}
 
-                <p>{submitFilters ? gameOn ? null : `You scored ${calculateScore()} out of ${filterOptions.quantity}!` : null}</p>
+                <p>{submitFilters ? gameOn ? null : 
+                `You scored ${calculateScore()} out of ${filterOptions.quantity}!` : 
+                null}</p>
 
                 {submitFilters ? <button onClick={gameOn ? submitQuiz : restartGame}>{gameOn ? "Submit Quiz" : "Play Again?"}</button> : null}
-            
-            
         </main>
     )
 }
